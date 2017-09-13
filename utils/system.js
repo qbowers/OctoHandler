@@ -100,7 +100,7 @@ function OctoPrint(data) {
         command: 'feedrate',
         factor: speed
       }
-      
+
       return this.post('/api/printer/printhead', params, {'Content-Type': 'application/json'});
     },
     jog: (x,y,z) => {
@@ -145,8 +145,6 @@ function OctoPrint(data) {
   this.wiggle = {
     setTime: (time) => {
 
-      console.log(this.port);
-      console.log(this.serialport);
 
 
 
@@ -162,7 +160,6 @@ function OctoPrint(data) {
       this.wiggle.iswiggling = false;
     },
     wiggle: () => {
-      console.log('WIIGGGLLEEE!!');
       this.printer.home('xyz');
 
       this.wiggle.time -= this.wiggle.delay

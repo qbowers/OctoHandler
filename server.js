@@ -107,7 +107,7 @@ app.post('/setup/set', (req, res) => {
     system.ready = true;
     res.status(200);
   } else res.status(204);
-  
+
   res.end();
 });
 
@@ -117,7 +117,7 @@ app.post('/setup/wiggle', (req, res) => {
   octoprint.wiggle.setTime(5);
 
 
-  
+
   res.status(204);
   res.end();
 });
@@ -144,7 +144,8 @@ app.use((req, res, next) => {
 //index
 app.get('/', (req, res) => {
   res.render('index.html', {
-    Printers: system.Printers
+    Printers: system.Printers,
+    OctoPrints: system.OctoPrints
   });
 });
 
