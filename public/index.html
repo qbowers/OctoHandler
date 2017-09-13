@@ -1,0 +1,37 @@
+<!doctype HTML>
+<html>
+  <head>
+    <title>Local: OctoHandler</title>
+    <link rel='stylesheet' href='/style/global.css'/>
+  </head>
+  <body>
+    <!--<img src='/printer/webcam/?action=stream' />-->
+    <div class='head'>
+      <img id='img-head' src='/img/head.jpg' />
+
+      <div class='cover'>
+        <h1>click the printer you wish to use </h1>
+      </div>
+    </div>
+
+
+
+
+    <div class='carousel printer-display-small'>
+      {% for printer in Printers %}
+        <!--name, status, color, heat, profile.name, job, server-->
+        <div class='printer-box-small' id='{{ printer.name }}-box'>
+          <a href='http://{{ printer.server.host }}:{{ printer.server.port }}'>{{ printer.name }}</a>
+        </div>
+
+      {% endfor %}
+    </div>
+
+  </body>
+  <script src='/socket.io/socket.io.js'></script>
+  <script src='/script/http.js'></script>
+  <script>
+    socket = io();
+    function close() {}
+  </script>
+</html>
