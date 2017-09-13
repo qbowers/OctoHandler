@@ -18,10 +18,10 @@
 
 
     <div class='carousel printer-display-small'>
-      {% for printer in Printers %}
+      {% for octoprint in OctoPrints %}
         <!--name, status, color, heat, profile.name, job, server-->
-        <div class='printer-box-small' id='{{ printer.name }}-box'>
-          <a href='http://{{ printer.server.host }}:{{ printer.server.port }}'>{{ printer.name }}</a>
+        <div class='printer-box-small' id='{{ octoprint.Printer.name }}-box'>
+          <a href='http://{{ octoprint.host }}:{{ octoprint.port }}'>{{ octoprint.printer.name }}</a>
         </div>
 
       {% endfor %}
