@@ -42,23 +42,32 @@ function OctoPrint(data) {
 
 
   this.connect = (serialport, profile = null, baud = null) => {
-    var params = {
-      command: 'connect',
-      port: serialport.comName
-    };
-    if (baud) params.baud = baud;
-    if (profile) params.profile = profile;
+    if (testweb) {  //to test website
+      this.serialport = serialport;
+      console.log(this.port + ' connected to ' + this.serialport.comName);
+    } else {        //normal opperation
+      var params = {
+        command: 'connect',
+        port: serialport.comName
+      };
+      if (baud) params.baud = baud;
+      if (profile) params.profile = profile;
 
-    this.post('/api/connection', params, {'Content-Type': 'application/json'}).then((res) => {
-      if (res.status == 204) {
-        this.serialport = serialport;
-        console.log(this.port + ' connected to ' + this.serialport.comName);
-      }
-    });
+      this.post('/api/connection', params, {'Content-Type': 'application/json'}).then((res) => {
+        if (res.status == 204) {
+          this.serialport = serialport;
+          console.log(this.port + ' connected to ' + this.serialport.comName);
+        }
+      });
+    }
   }
   this.disconnect = () => {
-    var params = {command: 'disconnect'};
-    return this.post('/api/connection', params, {'Content-Type': 'application/json'});
+    if (testweb) {  //to test website
+      console.log('disconnect testweb');
+    } else {          //normal opperation
+      var params = {command: 'disconnect'};
+      return this.post('/api/connection', params, {'Content-Type': 'application/json'});
+    }
   }
 
 
@@ -70,62 +79,99 @@ function OctoPrint(data) {
 
   this.file = {
     print: (filename) => {
-      var params = {command: 'select', print: true};
-      return this.post('/api/files/local/' + filename, params, {'Content-Type' : 'application/json'});
+      if (testweb) {} //to test website
+      else {          //normal opperation
+        var params = {command: 'select', print: true};
+        return this.post('/api/files/local/' + filename, params, {'Content-Type' : 'application/json'});
+      }
     },
     slice: (filename, options) => {
-      var params = {
-        command: 'slice',
-        slicer: 'cura',
-        gcode: filename + '.gcode'
-      };
-      Object.assign(params, options);
+      if (testweb) {} //to test website
+      else {          //normal opperation
+        var params = {
+          command: 'slice',
+          slicer: 'cura',
+          gcode: filename + '.gcode'
+        };
+        Object.assign(params, options);
 
-      return this.post('/api/files/local/' + filename, params, {'Content-Type' : 'application/json'});
+        return this.post('/api/files/local/' + filename, params, {'Content-Type' : 'application/json'});
+      }
     },
-    info: (filename) => { return this.get('/api/files/local/' + filename); }
+    info: (filename) => {
+      if (testweb) {} //to test website
+      else return this.get('/api/files/local/' + filename); //normal opperation
+    }
   }
   this.job = {
-    start: () => { return this.post('/api/job', {command: 'start'}, {'Content-Type': 'application/json'}) },
-    cancel: () => { return this.post('/api/job', {command: 'cancel'}, {'Content-Type' : 'application/json'}) },
-
-    pause: () => { return this.post('/api/job', {command: 'pause', action: 'pause'}, {'Content-Type' : 'application/json'}) },
-    resume: () => { return this.post('/api/job', {command: 'pause', action: 'resume'}, {'Content-Type' : 'application/json'}) },
-    info: () => { return this.get('/api/job') }
+    start: () => {
+      if (testweb) {} //to test website
+      else return this.post('/api/job', {command: 'start'}, {'Content-Type': 'application/json'}); //normal opperation
+    },
+    cancel: () => {
+      if (testweb) {} //to test website
+      else return this.post('/api/job', {command: 'cancel'}, {'Content-Type' : 'application/json'}); //normal opperation
+    },
+    pause: () => {
+      if (testweb) {} //to test website
+      else return this.post('/api/job', {command: 'pause', action: 'pause'}, {'Content-Type' : 'application/json'}); //normal opperation
+    },
+    resume: () => {
+      if (testweb) {} //to test website
+      else return this.post('/api/job', {command: 'pause', action: 'resume'}, {'Content-Type' : 'application/json'}); //normal opperation
+    },
+    info: () => {
+      if (testweb) {} //to test website
+      else return this.get('/api/job'); //normal opperation
+    }
   }
   this.printer = {
-    info: () => { return this.get('/api/printer?exclude=temperature,sd') },
+    info: () => {
+      if (testweb) {} //to test website
+      else return this.get('/api/printer?exclude=temperature,sd'); //normal opperation
+    },
     setSpeed: (speed) => {
-      var params = {
-        command: 'feedrate',
-        factor: speed
+      if (testweb) {} //to test website
+      else {          //normal opperation
+        var params = {
+          command: 'feedrate',
+          factor: speed
+        };
+        return this.post('/api/printer/printhead', params, {'Content-Type': 'application/json'});
       }
-
-      return this.post('/api/printer/printhead', params, {'Content-Type': 'application/json'});
     },
     jog: (x,y,z) => {
-      var params = {
-        command: 'jog',
-        x: x,
-        y: y,
-        z: z
-      };
-      return this.post('/api/printer/printhead', params, {'Content-Type': 'application/json'});
+      if (testweb) {} //to test website
+      else {          //normal opperation
+        var params = {
+          command: 'jog',
+          x: x,
+          y: y,
+          z: z
+        };
+        return this.post('/api/printer/printhead', params, {'Content-Type': 'application/json'});
+      }
     },
     home: (axesString) => {
-      var axes = [];
-      for (var i = 0; i < axesString.length; i++) axes.push(axesString.charAt(i));
-      var params = {
-        command: 'home',
-        axes: axes
-      };
-      return this.post('/api/printer/printhead', params, {'Content-Type': 'application/json'});
+      if (testweb) {} //to test website
+      else {          //normal opperation
+        var axes = [];
+        for (var i = 0; i < axesString.length; i++) axes.push(axesString.charAt(i));
+        var params = {
+          command: 'home',
+          axes: axes
+        };
+        return this.post('/api/printer/printhead', params, {'Content-Type': 'application/json'});
+      }
     },
     tool: (tool) => {
-      var params = {
-        command: ''
-      };
-      return this.post('/api/printer/tool', params, {'Content-Type': 'application/json'});
+      if (testweb) {} //to test website
+      else {          //normal opperation
+        var params = {
+          command: ''
+        };
+        return this.post('/api/printer/tool', params, {'Content-Type': 'application/json'});
+      }
     },
     temp: () => {
 
@@ -179,7 +225,7 @@ function OctoPrint(data) {
 
 
 
-  this.disconnect();
+
   OctoPrints.push(this);
 }
 
@@ -279,6 +325,7 @@ function newProfile() {
 
 const hostname = '10.20.30.109';
 var ready = false,
+    testweb = false,
     OctoPrints = [],
     Printers = [],
     Profiles = [],
@@ -295,3 +342,7 @@ module.exports.Printers = Printers;
 module.exports.Profile = Profile;
 module.exports.Profiles = Profiles;
 module.exports.ready = ready;
+module.exports.testweb = testweb;
+module.exports.testtestweb = function() {
+  console.log(testweb);
+}
