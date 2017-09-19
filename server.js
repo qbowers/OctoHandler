@@ -20,7 +20,7 @@ const express = require('express'),
 
 if (process.argv[2] && process.argv[2] == 'testweb') {
   console.log('testweb mode');
-  system.testweb = true;
+  system.testweb(true);
 }
 
 
@@ -32,20 +32,16 @@ for (var i = 0; i < config.Profiles.length; i++) new system.Profile(config.Profi
 for (var i = 0; i < config.Printers.length; i++) new system.Printer(config.Printers[i]);
 
 //GODDAMN ASYNCHRONOUS FUNCTIONS
-serial.refresh(system.testweb)
+serial.refresh(system.testweb())
 .then(() => {
   //if there are more ports than servers, throw an error
   //if (serial.length > system.OctoPrints.length) console.log('too many serial devices');
 
   //connect each server to a port
-  console.log(system.testweb);
-  system.testtestweb();
   for (var i = 0; i < serial.length; i++) {
     system.OctoPrints[i].disconnect();
     system.OctoPrints[i].connect( serial[i] );
   }
-  //system.OctoPrints[1].connect( serial[1] );
-  //console.log(system.OctoPrints[0].port);
 });
 
 
@@ -70,7 +66,7 @@ app.use(upload.any());
 //set up
 app.get('/setup', (req, res) => {
   res.render('setup.html', {
-    ready: system.ready,
+    ready: system.ready(),
     local: true,
 
     Printers: system.Printers,
@@ -113,7 +109,7 @@ app.post('/setup/set', (req, res) => {
   }
 
   if (ready) {
-    system.ready = true;
+    system.ready(true);
     res.status(200);
   } else res.status(204);
 
@@ -136,7 +132,7 @@ app.post('/setup/wiggle', (req, res) => {
 
 //redirect to setup
 app.use((req, res, next) => {
-  if ( system.ready || req.path.includes('.js') || req.path.includes('.css') ) next();
+  if ( system.ready() || req.path.includes('.js') || req.path.includes('.css') ) next();
   else {
     res.writeHead((req.method === 'GET') ? 302 : 310, {'Location': '/setup'});
     res.end();
@@ -164,8 +160,8 @@ app.use(express.static(__dirname + '/public'));
 
 
 
-server.listen((system.testweb) ? 8000:80, '0.0.0.0', () => {
+server.listen((system.testweb()) ? 8000:80, '0.0.0.0', () => {
   console.log('----Server Created----');
   console.log('IP-host: ' + ip.address);
-  console.log('server-port: ' + ((system.testweb) ? 8000:80));
+  console.log('server-port: ' + ((system.testweb()) ? 8000:80));
 });

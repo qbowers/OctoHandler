@@ -44,7 +44,7 @@ function OctoPrint(data) {
   this.connect = (serialport, profile = null, baud = null) => {
     if (testweb) {  //to test website
       this.serialport = serialport;
-      console.log(this.port + ' connected to ' + this.serialport.comName);
+      console.log('(testweb)' + this.port + ' connected to ' + this.serialport.comName);
     } else {        //normal opperation
       var params = {
         command: 'connect',
@@ -63,7 +63,7 @@ function OctoPrint(data) {
   }
   this.disconnect = () => {
     if (testweb) {  //to test website
-      console.log('disconnect testweb');
+      console.log('(testweb) ' + this.port + ' disconnected');
     } else {          //normal opperation
       var params = {command: 'disconnect'};
       return this.post('/api/connection', params, {'Content-Type': 'application/json'});
@@ -341,8 +341,5 @@ module.exports.Printer = Printer;
 module.exports.Printers = Printers;
 module.exports.Profile = Profile;
 module.exports.Profiles = Profiles;
-module.exports.ready = ready;
-module.exports.testweb = testweb;
-module.exports.testtestweb = function() {
-  console.log(testweb);
-}
+module.exports.ready = function(val = null) {if (val == null) return ready; else ready = val};
+module.exports.testweb = function(val = null) {if (val == null) return testweb; else testweb = val};
