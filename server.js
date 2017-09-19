@@ -21,6 +21,10 @@ const express = require('express'),
 if (process.argv[2] && process.argv[2] == 'testweb') {
   console.log('testweb mode');
   system.testweb(true);
+
+  if (process.argv[3] && process.argv[3] == 'skipsetup') {
+    system.ready(true);
+  }
 }
 
 
