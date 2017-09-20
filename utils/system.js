@@ -5,7 +5,6 @@ function OctoPrint(data) {
   this.hostname = hostname;
   Object.assign(this, data); //requires port, apikey
 
-
   this.request = (method, path, params = null, headers = null) => {
     var body = '',
         options = {

@@ -5,9 +5,7 @@ const express = require('express'),
       upload = require('multer')(),
 
       io = require('socket.io')(server),
-
       scss = require('node-sass-middleware'),
-
       yaml = require('yamljs'),
 
       template = require('./utils/template.js')('public', app),
@@ -15,7 +13,11 @@ const express = require('express'),
       ip = require('./utils/ip.js'),
       system = require('./utils/system.js');
 
+config = yaml.load('config.yaml');
 
+for (var i = 0; i < config.OctoPrints.length; i++) new system.OctoPrint(config.OctoPrints[i]);
+for (var i = 0; i < config.Profiles.length; i++) new system.Profile(config.Profiles[i]);
+for (var i = 0; i < config.Printers.length; i++) new system.Printer(config.Printers[i]);
 
 
 if (process.argv[2] && process.argv[2] == 'testweb') {
@@ -24,16 +26,14 @@ if (process.argv[2] && process.argv[2] == 'testweb') {
 
   if (process.argv[3] && process.argv[3] == 'skipsetup') {
     system.ready(true);
+
+    for (var i = 0; i < system.OctoPrints.length; i++) system.OctoPrints[i].Printer = {name: 'this is a test'};
   }
 }
 
 
 //load config file
-config = yaml.load('config.yaml');
 
-for (var i = 0; i < config.OctoPrints.length; i++) new system.OctoPrint(config.OctoPrints[i]);
-for (var i = 0; i < config.Profiles.length; i++) new system.Profile(config.Profiles[i]);
-for (var i = 0; i < config.Printers.length; i++) new system.Printer(config.Printers[i]);
 
 //GODDAMN ASYNCHRONOUS FUNCTIONS
 serial.refresh(system.testweb())
