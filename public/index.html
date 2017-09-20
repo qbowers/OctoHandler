@@ -23,7 +23,7 @@
 
         {% if octoprint.Printer %}
           <div class='printer-box-small' id='{{ octoprint.Printer.name }}-box'>
-            <button href='http://{{ octoprint.hostname }}:{{ octoprint.port }}'>{{ octoprint.Printer.name }}</button>
+            <a href='http://{{ octoprint.hostname }}:{{ octoprint.port }}'><button>{{ octoprint.Printer.name }}</button></a>
           </div>
         {% endif %}
 

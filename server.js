@@ -27,7 +27,7 @@ if (process.argv[2] && process.argv[2] == 'testweb') {
   if (process.argv[3] && process.argv[3] == 'skipsetup') {
     system.ready(true);
 
-    for (var i = 0; i < system.OctoPrints.length; i++) system.OctoPrints[i].Printer = {name: 'this is a test'};
+    for (var i = 0; i < system.OctoPrints.length; i++) system.OctoPrints[i].Printer = {name: 'Fake Printer'};
   }
 }
 
