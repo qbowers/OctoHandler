@@ -1,4 +1,5 @@
 OctoPrint: 8
+printers: 8
 
 OctoPrints:
   - port: 5001

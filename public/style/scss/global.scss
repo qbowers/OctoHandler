@@ -91,7 +91,9 @@ button:hover { background-color: #3e8e41 }
 .carousel {
   display: flex;
 
-  div { flex-shrink: 0; }
+  div {
+    flex-shrink: 0;
+  }
 }
 
 .printer-display-small {}
