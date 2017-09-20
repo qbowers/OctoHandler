@@ -1,14 +1,10 @@
-.stage {
-
-}
+@import 'global';
 
 
 .setup {
   display: none;
-}
-.center {
-  margin: 0 auto;
-  background-color: rgba(10,10,10,0.2);
+  width: 35vw;
+  margin-top: 20vh;
 }
 
 #title .container {

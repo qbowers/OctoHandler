@@ -20,7 +20,9 @@ body {margin: 0; overflow: hidden;}
 }
 
 
-
+.center {
+  margin: 0 auto;
+}
 
 button {
   background-color: #4caf50;
@@ -90,6 +92,7 @@ button:hover { background-color: #3e8e41 }
 
 .carousel {
   display: flex;
+  overflow-x: auto;
 
   div {
     flex-shrink: 0;
@@ -98,15 +101,15 @@ button:hover { background-color: #3e8e41 }
 
 .printer-display-small {}
 .printer-box-small {
-  width: 60vw;
-  height: 400vh;
+  width: 10vw;
+  height: 33vh;
 
   margin-top: 3vh;
-  margin-left: 3vh;
+  margin-left: 4vh;
 
   border-color: black;
   border-style: solid;
-  border-width: 5px;
+  border-width: 1px;
 
   background-color: #cccccc;
 }
