@@ -1,1 +1,65 @@
 @import 'global';
+
+
+$carousel-height: 50vh;
+$printer-box-buffer: 3vh;
+
+#img-head {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  overflow-y: hidden;
+}
+.head {
+  position: relative;
+
+  width: 100vw;
+  height: 100vh - $carousel-height;
+}
+
+
+
+
+#title {
+
+  position: absolute;
+  top: 5vh;
+
+  background-color: rgba(0,0,0,0.6);
+
+  color: white;
+  text-align: right;
+  font-size: 35px;
+
+  h1 {
+    font-weight: normal;
+    margin: 2vh 7vh 2vh 20vh;
+  }
+}
+#job-btn {
+
+}
+
+
+
+
+.printer-display-small {
+  height: 100%;
+}
+.printer-box-small {
+  width: 30vh;
+  height: $carousel-height - 2*$printer-box-buffer;
+  margin: $printer-box-buffer 0 $printer-box-buffer $printer-box-buffer;
+
+  border-color: black;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 1vh;
+
+  background-color: #cccccc;
+
+}
+.printer-box-small:last-child {
+  margin-right: $printer-box-buffer;
+  background-color: green;
+}
