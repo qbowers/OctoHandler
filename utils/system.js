@@ -217,14 +217,6 @@ function OctoPrint(data) {
     iswiggling: false
   }
 
-
-
-
-
-
-
-
-
   OctoPrints.push(this);
 }
 

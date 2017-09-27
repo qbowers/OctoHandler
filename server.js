@@ -15,9 +15,9 @@ const express = require('express'),
 
 config = yaml.load('config.yaml');
 
-for (var i = 0; i < config.OctoPrints.length; i++) new system.OctoPrint(config.OctoPrints[i]);
 for (var i = 0; i < config.Profiles.length; i++) new system.Profile(config.Profiles[i]);
 for (var i = 0; i < config.Printers.length; i++) new system.Printer(config.Printers[i]);
+for (var i = 0; i < config.OctoPrints.length; i++) new system.OctoPrint(config.OctoPrints[i]);
 
 
 if (process.argv[2] && process.argv[2] == 'testweb') {
@@ -26,8 +26,7 @@ if (process.argv[2] && process.argv[2] == 'testweb') {
 
   if (process.argv[3] && process.argv[3] == 'skipsetup') {
     system.ready(true);
-
-    for (var i = 0; i < system.OctoPrints.length; i++) system.OctoPrints[i].Printer = {name: 'Fake Printer'};
+    for (var i = 0; i < system.OctoPrints.length; i++) system.OctoPrints[i].Printer = system.Printers[i];
   }
 }
 
@@ -124,9 +123,7 @@ app.post('/setup/wiggle', (req, res) => {
   console.log('octoprint wiggled!');
   var octoprint = system.OctoPrints[req.body.octoprint];
   octoprint.wiggle.setTime(5);
-
-
-
+  
   res.status(204);
   res.end();
 });

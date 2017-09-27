@@ -1,10 +1,10 @@
 @import 'global';
 
 
-$carousel-height: 50vh;
+$carousel-height: 60vh;
 $printer-box-buffer: 3vh;
 
-#img-head {
+.banner {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -16,6 +16,9 @@ $printer-box-buffer: 3vh;
   width: 100vw;
   height: 100vh - $carousel-height;
 }
+
+
+
 
 
 
@@ -43,10 +46,11 @@ $printer-box-buffer: 3vh;
 
 
 
-.printer-display-small {
-  height: 100%;
-}
+.printer-display-small { height: 100%; }
 .printer-box-small {
+
+  padding: 0vh 4vh;
+
   width: 30vh;
   height: $carousel-height - 2*$printer-box-buffer;
   margin: $printer-box-buffer 0 $printer-box-buffer $printer-box-buffer;
@@ -56,10 +60,6 @@ $printer-box-buffer: 3vh;
   border-width: 1px;
   border-radius: 1vh;
 
-  background-color: #cccccc;
+  background-color: #e0e0e0;
 
-}
-.printer-box-small:last-child {
-  margin-right: $printer-box-buffer;
-  background-color: green;
 }

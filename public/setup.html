@@ -1,59 +1,60 @@
-<!doctype HTML>
-<html>
-  <head>
-    <title>Local: OctoHandler</title>
+{% extends 'main.html' %}
 
-    <link rel='stylesheet' href='/style/setup.css' />
-  </head>
-  <body>
-    {% if local %}
+{% block style %}
+  <link rel='stylesheet' href='/style/setup.css' />
+{% endblock %}
 
 
-      <div class='stage' id='title' style='display:block'>
-        <div class='container center'>
-          <h1>SETUP</h1>
-          <p>You have to set up some servers first. <button onclick='start()'>continue</button></p>
-        </div>
+
+
+
+{% block body %}
+  {% if local %}
+    <div class='stage' id='title' style='display:block'>
+      <div class='container center'>
+        <h1>SETUP</h1>
+        <p>You have to set up some servers first. <button onclick='start()'>continue</button></p>
       </div>
-
-
-      <div class='stage' id='prompt'>
-
-
-
-        {% for octoprint in OctoPrints %}
-          <div class='setup center' id='octoprint-{{ loop.index0 }}'>
-            <h1>Select which printer is wiggling</h1>
-            <button onclick='OctoPrints[{{ loop.index0 }}].wiggle()'>wiggle</button>
-            <div class='dropdown'>
-              <button id='button'>Select Printer</button>
-              <div class='content'></div>
-            </div>
-            <button onclick='OctoPrints[{{ loop.index0 }}].set()'>Set</button>
-          </div>
-        {% endfor %}
-      </div>
-
-
-
-    {% else %}
-      <div class='stage' id='remote'>
-        <h1>You are a remote user</h1>
-        <p>Please go to the design lab to set up the servers</p>
-      </div>
-    {% endif %}
-
-
-    <div class='stage' id='complete'>
-      <h1>Done!</h1>
-      <p>Printers are all set up! You may now use them. <a href='/'><button>continue</button></a></p>
     </div>
 
 
-  </body>
-  <script src='/socket.io/socket.io.js'></script>
-  <script src='/script/jquery-3.2.1.min.js'></script>
-  <script src='/script/http.js'></script>
+    <div class='stage' id='prompt'>
+
+
+
+      {% for octoprint in OctoPrints %}
+        <div class='setup center' id='octoprint-{{ loop.index0 }}'>
+          <h1>Select which printer is wiggling</h1>
+          <button onclick='OctoPrints[{{ loop.index0 }}].wiggle()'>wiggle</button>
+          <div class='dropdown'>
+            <button id='button'>Select Printer</button>
+            <div class='content'></div>
+          </div>
+          <button onclick='OctoPrints[{{ loop.index0 }}].set()'>Set</button>
+        </div>
+      {% endfor %}
+    </div>
+
+
+  {% else %}
+
+
+    <div class='stage' id='remote'>
+      <h1>You are a remote user</h1>
+      <p>Please go to the design lab to set up the servers</p>
+    </div>
+  {% endif %}
+
+  <div class='stage' id='complete'>
+    <h1>Done!</h1>
+    <p>Printers are all set up! You may now use them. <a href='/'><button>continue</button></a></p>
+  </div>
+
+
+
+{% endblock %}
+
+{% block script %}
   <script>
     socket = io();
 
@@ -146,4 +147,4 @@
 
     function close() {}
   </script>
-</html>
+{% endblock %}

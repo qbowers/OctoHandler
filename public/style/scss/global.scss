@@ -28,7 +28,9 @@ body {
     src: url('fonts/audimat_OT/AUdimat-BoldItalic.otf') format('opentype');
 }
 
-
+a {
+  text-decoration: none;
+}
 
 
 
@@ -110,7 +112,10 @@ button:hover { background-color: #3e8e41 }
 
 
 
-
+.flex {
+  display: flex;
+  * {flex-shrink: auto;}
+}
 .carousel {
   display: flex;
   overflow-x: auto;
