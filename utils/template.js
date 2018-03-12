@@ -4,5 +4,4 @@ function init(dir, app) {
   return nunjucks;
 }
 
-
 module.exports = init;

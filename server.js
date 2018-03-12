@@ -8,20 +8,26 @@ const express = require('express'),
       scss = require('node-sass-middleware'),
       yaml = require('yamljs'),
 
+
+      //my own files
       template = require('./utils/template.js')('public', app),
       serial = require('./utils/serial.js'),
       ip = require('./utils/ip.js'),
       system = require('./utils/system.js');
 
-config = yaml.load('config.yaml');
+
+
+//load config file
+var config = yaml.load('config.yaml');
 
 for (var i = 0; i < config.Profiles.length; i++) new system.Profile(config.Profiles[i]);
 for (var i = 0; i < config.Printers.length; i++) new system.Printer(config.Printers[i]);
 for (var i = 0; i < config.OctoPrints.length; i++) new system.OctoPrint(config.OctoPrints[i]);
 
 
+//check arguments for testweb
 if (process.argv[2] && process.argv[2] == 'testweb') {
-  console.log('testweb mode');
+  console.log('(testweb mode)');
   system.testweb(true);
 
   if (process.argv[3] && process.argv[3] == 'skipsetup') {
@@ -31,18 +37,22 @@ if (process.argv[2] && process.argv[2] == 'testweb') {
 }
 
 
-//load config file
 
 
-//GODDAMN ASYNCHRONOUS FUNCTIONS
+
+
+
+//Assign each server a printer
 serial.refresh(system.testweb())
 .then(() => {
   //if there are more ports than servers, throw an error
   //if (serial.length > system.OctoPrints.length) console.log('too many serial devices');
 
   //connect each server to a port
+  //TODO: leave octoprint servers connected
   for (var i = 0; i < serial.length; i++) {
     system.OctoPrints[i].disconnect();
+    //TODO: error handler: if the thing doesnt connect, try again a few times
     system.OctoPrints[i].connect( serial[i] );
   }
 });
@@ -52,13 +62,14 @@ serial.refresh(system.testweb())
 
 
 
-
+//rout scss
 app.use(scss({
     src: __dirname + '/public/style/scss',
     dest: __dirname + '/public/style',
     prefix: '/style',
     outputStyle: 'compressed'
 }));
+//for reading the bodies of http posts
 app.use(upload.any());
 
 
@@ -77,6 +88,7 @@ app.get('/setup', (req, res) => {
   });
 });
 
+//gets a list of potential printers for a given server
 app.get('/setup/options/:server', (req, res) => {
   var octoprint = system.OctoPrints[req.params.server];
   var options = [];
@@ -89,12 +101,12 @@ app.get('/setup/options/:server', (req, res) => {
   res.json(options);
 });
 
-
+//assign a printer to a server
 app.post('/setup/set', (req, res) => {
-  //determine printer from printername
 
   var printer,
       octoprint = system.OctoPrints[parseInt(req.body.octoprint)];
+  //determine printer from printername
   for (var i = 0; i < system.Printers.length; i++) if(system.Printers[i].name == req.body.printer) printer = system.Printers[i];
 
 
@@ -119,11 +131,12 @@ app.post('/setup/set', (req, res) => {
   res.end();
 });
 
+//wiggle whatever printer is connected to a server
 app.post('/setup/wiggle', (req, res) => {
   console.log('octoprint wiggled!');
   var octoprint = system.OctoPrints[req.body.octoprint];
   octoprint.wiggle.setTime(5);
-  
+
   res.status(204);
   res.end();
 });
@@ -132,8 +145,9 @@ app.post('/setup/wiggle', (req, res) => {
 
 
 //redirect to setup
+//lets through any scripty or style things
 app.use((req, res, next) => {
-  if ( system.ready() || req.path.includes('.js') || req.path.includes('.css') ) next();
+  if ( system.ready() || req.path.includes('script/') || req.path.includes('style/') ) next();
   else {
     res.writeHead((req.method === 'GET') ? 302 : 310, {'Location': '/setup'});
     res.end();
@@ -156,13 +170,13 @@ app.get('/', (req, res) => {
 });
 
 
+//just give whatever other files the client asks for
 app.use(express.static(__dirname + '/public'));
 
 
 
-
-server.listen((system.testweb()) ? 8000:80, '0.0.0.0', () => {
+var port = (system.testweb()) ? 8000:80;
+server.listen(port, '0.0.0.0', () => {
   console.log('----Server Created----');
-  console.log('IP-host: ' + ip.address);
-  console.log('server-port: ' + ((system.testweb()) ? 8000:80));
+  console.log('\nGo to localhost:' + port + ' in your browser');
 });

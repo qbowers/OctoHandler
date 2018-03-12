@@ -3,9 +3,13 @@ const http = require('http');
 
 function OctoPrint(data) {
   this.hostname = hostname;
-  Object.assign(this, data); //requires port, apikey
 
-  this.request = (method, path, params = null, headers = null) => {
+  //gives all the properties of data to this instance
+  Object.assign(this, data);
+
+
+  //generic http request template
+  this.request = (method, path, successcode, params = null, headers = null) => {
     var body = '',
         options = {
           method: method,
@@ -20,30 +24,44 @@ function OctoPrint(data) {
       var req = http.request(options, (res) => {
         res.on('data', (d) => {body += d; });
         res.on('end', () => {
-          resolve({
+
+
+          if (successcode && res.statusCode != successcode) {
+            reject({
+              status: res.statusCode,
+              body: body
+            });
+          } else resolve({
             status: res.statusCode,
             body: (body.length != 0) ? JSON.parse(body) : null
           });
+
+
         });
       });
       req.on('error', reject);
+
       if (params) req.write(JSON.stringify(params));
       req.end();
     });
   };
 
-  this.get = (path) => { return this.request('GET', path); }
-  this.delete = (path, params, headers = null) => { return this.request('DELETE', path, params, headers); }
-  this.post = (path, params, headers = null) => { return this.request('POST', path, params, headers); }
-  this.patch = (path, params, headers = null) => { return this.request('PATCH', path, params, headers); }
+  //http request methods
+  this.get = (path, successcode) => { return this.request('GET', path, successcode); }
+  this.delete = (path, successcode, params, headers = null) => { return this.request('DELETE', path, successcode, params, headers); }
+  this.post = (path, successcode, params, headers = {'Content-Type': 'application/json'}) => { return this.request('POST', path, successcode, params, headers); }
+  this.patch = (path, successcode, params, headers = null) => { return this.request('PATCH', path, successcode, params, headers); }
 
 
 
-
+  this.getconnect = () => {
+    if (testweb) return new Promise((resolve, reject) => { resolve() });
+    else return this.get('/api/connection', 200);
+  }
   this.connect = (serialport, profile = null, baud = null) => {
     if (testweb) {  //to test website
       this.serialport = serialport;
-      console.log('(testweb)' + this.port + ' connected to ' + this.serialport.comName);
+      return new Promise((resolve, reject) => { resolve() });
     } else {        //normal opperation
       var params = {
         command: 'connect',
@@ -52,20 +70,18 @@ function OctoPrint(data) {
       if (baud) params.baud = baud;
       if (profile) params.profile = profile;
 
-      this.post('/api/connection', params, {'Content-Type': 'application/json'}).then((res) => {
-        if (res.status == 204) {
-          this.serialport = serialport;
-          console.log(this.port + ' connected to ' + this.serialport.comName);
-        }
+      return this.post('/api/connection', 204, params).then((res) => {
+        this.serialport = serialport;
+        console.log(this.port + ' connected to ' + this.serialport.comName);
       });
     }
   }
   this.disconnect = () => {
     if (testweb) {  //to test website
-      console.log('(testweb) ' + this.port + ' disconnected');
+      //console.log('(testweb) ' + this.port + ' disconnected');
     } else {          //normal opperation
       var params = {command: 'disconnect'};
-      return this.post('/api/connection', params, {'Content-Type': 'application/json'});
+      return this.post('/api/connection', 204, params);
     }
   }
 
@@ -75,13 +91,17 @@ function OctoPrint(data) {
 
 
 
-
+  //--------UNTESTED
+  //these are api commands that I found on the octoprint website that I figured would be useful
   this.file = {
+    upload: () => {
+      // DO STUFF
+    },
     print: (filename) => {
       if (testweb) {} //to test website
       else {          //normal opperation
         var params = {command: 'select', print: true};
-        return this.post('/api/files/local/' + filename, params, {'Content-Type' : 'application/json'});
+        return this.post('/api/files/local/' + filename, 204, params);
       }
     },
     slice: (filename, options) => {
@@ -94,40 +114,42 @@ function OctoPrint(data) {
         };
         Object.assign(params, options);
 
-        return this.post('/api/files/local/' + filename, params, {'Content-Type' : 'application/json'});
+        return this.post('/api/files/local/' + filename, 202, params);
       }
     },
     info: (filename) => {
       if (testweb) {} //to test website
-      else return this.get('/api/files/local/' + filename); //normal opperation
+      else return this.get('/api/files/local/' + filename, 200); //normal opperation
     }
   }
+  //-----------UNTESTED
   this.job = {
     start: () => {
       if (testweb) {} //to test website
-      else return this.post('/api/job', {command: 'start'}, {'Content-Type': 'application/json'}); //normal opperation
+      else return this.post('/api/job', 204, {command: 'start'}); //normal opperation
     },
     cancel: () => {
       if (testweb) {} //to test website
-      else return this.post('/api/job', {command: 'cancel'}, {'Content-Type' : 'application/json'}); //normal opperation
+      else return this.post('/api/job', 204, {command: 'cancel'}); //normal opperation
     },
     pause: () => {
       if (testweb) {} //to test website
-      else return this.post('/api/job', {command: 'pause', action: 'pause'}, {'Content-Type' : 'application/json'}); //normal opperation
+      else return this.post('/api/job', 204, {command: 'pause', action: 'pause'}); //normal opperation
     },
     resume: () => {
       if (testweb) {} //to test website
-      else return this.post('/api/job', {command: 'pause', action: 'resume'}, {'Content-Type' : 'application/json'}); //normal opperation
+      else return this.post('/api/job', 204, {command: 'pause', action: 'resume'}); //normal opperation
     },
     info: () => {
       if (testweb) {} //to test website
-      else return this.get('/api/job'); //normal opperation
+      else return this.get('/api/job', 200); //normal opperation
     }
   }
+  //----------UNTESTED
   this.printer = {
     info: () => {
       if (testweb) {} //to test website
-      else return this.get('/api/printer?exclude=temperature,sd'); //normal opperation
+      else return this.get('/api/printer?exclude=temperature,sd', 200); //normal opperation
     },
     setSpeed: (speed) => {
       if (testweb) {} //to test website
@@ -136,7 +158,7 @@ function OctoPrint(data) {
           command: 'feedrate',
           factor: speed
         };
-        return this.post('/api/printer/printhead', params, {'Content-Type': 'application/json'});
+        return this.post('/api/printer/printhead', 204, params);
       }
     },
     jog: (x,y,z) => {
@@ -148,9 +170,10 @@ function OctoPrint(data) {
           y: y,
           z: z
         };
-        return this.post('/api/printer/printhead', params, {'Content-Type': 'application/json'});
+        return this.post('/api/printer/printhead', 204, params);
       }
     },
+    //except this one, this one works fine
     home: (axesString) => {
       if (testweb) {} //to test website
       else {          //normal opperation
@@ -160,16 +183,19 @@ function OctoPrint(data) {
           command: 'home',
           axes: axes
         };
-        return this.post('/api/printer/printhead', params, {'Content-Type': 'application/json'});
+        return this.post('/api/printer/printhead', 204, params);
       }
     },
+
+
+    //TO DO
     tool: (tool) => {
       if (testweb) {} //to test website
       else {          //normal opperation
         var params = {
           command: ''
         };
-        return this.post('/api/printer/tool', params, {'Content-Type': 'application/json'});
+        return this.post('/api/printer/tool', 204, params);
       }
     },
     temp: () => {
@@ -186,13 +212,9 @@ function OctoPrint(data) {
 
 
 
-
+  //essentially, the server will make the printer wiggle for a given time, and then stop
   this.wiggle = {
     setTime: (time) => {
-
-
-
-
       time *= 1000;
       if (time > this.wiggle.time) this.wiggle.time = time;
       if (!this.wiggle.iswiggling) {
@@ -217,6 +239,9 @@ function OctoPrint(data) {
     iswiggling: false
   }
 
+
+
+  //constructor add every instance to an array
   OctoPrints.push(this);
 }
 
@@ -269,14 +294,15 @@ function Printer(data) {
 
   this.match = (octoprint) => {
     //determine if octoprint is compatible based on serial port and associated profile info
+    //or if the printer is already connected
     return (!this.OctoPrint && true);
   }
 
-
+  //constructor adds every instance to an array
   Printers.push(this);
 }
 
-
+//classes I might need later
 function Job(data) {
 
 }
@@ -284,7 +310,7 @@ function SlicingProfile(data) {
 
 }
 
-
+//Other stuff I might need later
 function Profile(data) {
   this.heatedBed = false;
   Object.assign(this, data);
@@ -305,7 +331,8 @@ function Profile(data) {
   Profiles.push(this);
 }
 
-
+//functions for adding printers or printer types to the system
+//might add them later
 function newPrinter() {
 
 }

@@ -28,7 +28,7 @@ $printer-box-buffer: 3vh;
   position: absolute;
   top: 5vh;
 
-  background-color: rgba(0,0,0,0.6);
+  background-color: $faded-background;
 
   color: white;
   text-align: right;
@@ -40,6 +40,10 @@ $printer-box-buffer: 3vh;
   }
 }
 #job-btn {
+  width: 10vh;
+  height: 10vh;
+
+  background-color: $faded-background;
 
 }
 
