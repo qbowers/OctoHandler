@@ -99,14 +99,14 @@ function OctoPrint(data) {
     },
     print: (filename) => {
       if (testweb) {} //to test website
-      else {          //normal opperation
+      else {          //normal operation
         var params = {command: 'select', print: true};
         return this.post('/api/files/local/' + filename, 204, params);
       }
     },
     slice: (filename, options) => {
       if (testweb) {} //to test website
-      else {          //normal opperation
+      else {          //normal operation
         var params = {
           command: 'slice',
           slicer: 'cura',
@@ -119,41 +119,41 @@ function OctoPrint(data) {
     },
     info: (filename) => {
       if (testweb) {} //to test website
-      else return this.get('/api/files/local/' + filename, 200); //normal opperation
+      else return this.get('/api/files/local/' + filename, 200); //normal operation
     }
   }
   //-----------UNTESTED
   this.job = {
     start: () => {
       if (testweb) {} //to test website
-      else return this.post('/api/job', 204, {command: 'start'}); //normal opperation
+      else return this.post('/api/job', 204, {command: 'start'}); //normal operation
     },
     cancel: () => {
       if (testweb) {} //to test website
-      else return this.post('/api/job', 204, {command: 'cancel'}); //normal opperation
+      else return this.post('/api/job', 204, {command: 'cancel'}); //normal operation
     },
     pause: () => {
       if (testweb) {} //to test website
-      else return this.post('/api/job', 204, {command: 'pause', action: 'pause'}); //normal opperation
+      else return this.post('/api/job', 204, {command: 'pause', action: 'pause'}); //normal operation
     },
     resume: () => {
       if (testweb) {} //to test website
-      else return this.post('/api/job', 204, {command: 'pause', action: 'resume'}); //normal opperation
+      else return this.post('/api/job', 204, {command: 'pause', action: 'resume'}); //normal operation
     },
     info: () => {
       if (testweb) {} //to test website
-      else return this.get('/api/job', 200); //normal opperation
+      else return this.get('/api/job', 200); //normal operation
     }
   }
   //----------UNTESTED
   this.printer = {
     info: () => {
       if (testweb) {} //to test website
-      else return this.get('/api/printer?exclude=temperature,sd', 200); //normal opperation
+      else return this.get('/api/printer?exclude=temperature,sd', 200); //normal operation
     },
     setSpeed: (speed) => {
       if (testweb) {} //to test website
-      else {          //normal opperation
+      else {          //normal operation
         var params = {
           command: 'feedrate',
           factor: speed
@@ -163,7 +163,7 @@ function OctoPrint(data) {
     },
     jog: (x,y,z) => {
       if (testweb) {} //to test website
-      else {          //normal opperation
+      else {          //normal operation
         var params = {
           command: 'jog',
           x: x,
@@ -176,7 +176,7 @@ function OctoPrint(data) {
     //except this one, this one works fine
     home: (axesString) => {
       if (testweb) {} //to test website
-      else {          //normal opperation
+      else {          //normal operation
         var axes = [];
         for (var i = 0; i < axesString.length; i++) axes.push(axesString.charAt(i));
         var params = {
@@ -191,7 +191,7 @@ function OctoPrint(data) {
     //TO DO
     tool: (tool) => {
       if (testweb) {} //to test website
-      else {          //normal opperation
+      else {          //normal operation
         var params = {
           command: ''
         };
@@ -241,7 +241,7 @@ function OctoPrint(data) {
 
 
 
-  //constructor add every instance to an array
+  //constructor adds every instance to an array
   OctoPrints.push(this);
 }
 

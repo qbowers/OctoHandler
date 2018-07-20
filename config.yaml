@@ -23,54 +23,54 @@ Printers:
   - name: phyllis
     type: printrbot-play
     color: blue
-    status: not ready
+    status: ready
     active: false
   - name: pippin
     type: printrbot-play
     color: blue
-    status: not ready
+    status: ready
     active: false
   - name: poppin
     type: printrbot-play
     color: blue
-    status: not ready
+    status: ready
     active: false
   - name: pamella
     type: printrbot-play
     color: blue
-    status: not ready
+    status: ready
     active: false
   - name: pablo
     type: printrbot-play
     color: blue
-    status: not ready
+    status: ready
     active: false
   - name: pietro
     type: printrbot-play
     color: blue
-    status: not ready
+    status: ready
     active: false
 
   - name: sergei
     type: printrbot-simple
     color: blue
-    status: not ready
+    status: ready
     active: false
   - name: sakhmet
     type: printrbot-plus
     color: blue
-    status: not ready
+    status: ready
     active: false
 
   - name: rolanda
     type: robo-3d
     color: blue
-    status: not ready
+    status: ready
     active: false
   - name: reuben
     type: robo-3d
     color: blue
-    status: not ready
+    status: ready
     active: false
 
 Profiles:

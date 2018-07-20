@@ -8,6 +8,8 @@
 
 
 {% block body %}
+
+
   <div class='head'>
     <img class='banner' src='/img/head.jpg' />
 
@@ -28,11 +30,11 @@
         <a href='http://{{ octoprint.hostname }}:{{ octoprint.port }}'>
           <div class='printer-box-small' id='{{ octoprint.Printer.name }}-box'>
 
-            <p>{{ octoprint.Printer.name }}</p><p>{{ octoprint.Printer.type }}</p><div></div>
+            <div class='flex'><p>{{ octoprint.Printer.name }}</p><p>{{ octoprint.Printer.type }}</p></div>
             <p>{{ octoprint.Printer.status }}</p><div class='progress-bar'></div>
 
 
-            <canvas class='graph heat'></canvas>
+            <canvas class='graph' id='heat{{ loop.index }}'></canvas>
             <canvas class='plane'></canvas>
 
           </div>
